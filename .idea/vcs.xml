@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/usb-pd-rs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ws2812-spi-rs" vcs="Git" />
   </component>
 </project>

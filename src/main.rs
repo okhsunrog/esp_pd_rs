@@ -6,6 +6,7 @@ use esp_idf_svc::hal::prelude::*;
 use esp_idf_svc::hal::spi::*;
 use esp_idf_svc::hal::spi::{SpiBusDriver, SpiDriver};
 use log::info;
+use smart_leds::hsv::{hsv2rgb, Hsv};
 use smart_leds::{SmartLedsWrite, RGB8};
 use std::thread;
 use std::time::Duration;
@@ -35,21 +36,18 @@ fn main() -> Result<()> {
     let bus = SpiBusDriver::new(driver, &config).unwrap();
 
     let mut data: [RGB8; 1] = [RGB8::default(); 1];
-    let empty: [RGB8; 1] = [RGB8::default(); 1];
     let mut ws = Ws2812::new(bus);
+    info!("Running rainbow test...");
 
-    loop {
-        data[0] = RGB8 {
-            r: 0,
-            g: 0x10,
-            b: 0,
-        };
+    #[allow(clippy::infinite_iter)]
+    (0..=255).cycle().for_each(|hue| {
+        thread::sleep(Duration::from_millis(10));
+        data[0] = hsv2rgb(Hsv {
+            hue,
+            sat: 255,
+            val: 20,
+        });
         ws.write(data.iter().cloned()).unwrap();
-        thread::sleep(Duration::from_secs(2));
-        info!("on");
-
-        ws.write(empty.iter().cloned()).unwrap();
-        thread::sleep(Duration::from_secs(2));
-        info!("off");
-    }
+    });
+    Ok(())
 }

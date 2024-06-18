@@ -8,6 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="479a280d-0249-4ad0-90fb-32fad4b152db" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
@@ -36,7 +37,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/okhsunrog/RustroverProjects/esp_pd",
+    "last_opened_file_path": "/home/okhsunrog/RustroverProjects/esp_pd_rs",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -119,6 +120,7 @@
       <workItem from="1718708016618" duration="475000" />
       <workItem from="1718711520210" duration="26000" />
       <workItem from="1718712221375" duration="3504000" />
+      <workItem from="1718717739401" duration="1557000" />
     </task>
     <servers />
   </component>
