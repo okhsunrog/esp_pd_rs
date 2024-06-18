@@ -8,11 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="479a280d-0249-4ad0-90fb-32fad4b152db" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ws2812-spi-rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/esp_pd.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/esp_pd.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -122,7 +118,7 @@
       <workItem from="1718707720722" duration="289000" />
       <workItem from="1718708016618" duration="475000" />
       <workItem from="1718711520210" duration="26000" />
-      <workItem from="1718712221375" duration="3248000" />
+      <workItem from="1718712221375" duration="3504000" />
     </task>
     <servers />
   </component>
