@@ -8,6 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/usb-pd-rs/fusb302b/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/usb-pd-rs/usb-pd/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ws2812-spi-rs/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/esp-idf-hal/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/esp-idf-hal/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

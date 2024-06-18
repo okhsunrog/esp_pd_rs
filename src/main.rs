@@ -15,24 +15,17 @@ use ws2812_spi::Ws2812;
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
     esp_idf_svc::log::EspLogger::initialize_default();
-
     let peripherals = Peripherals::take()?;
-    let spi = peripherals.spi2;
 
-    let sclk = peripherals.pins.gpio6;
-    let sdo = peripherals.pins.gpio10;
-
-    let driver = SpiDriver::new(
-        spi,
-        sclk,
-        sdo,
+    let driver = SpiDriver::new_without_sclk(
+        peripherals.spi2,
+        peripherals.pins.gpio10,
         Option::<AnyIOPin>::None,
         &DriverConfig::new().dma(Dma::Auto(512)),
-    )
-    .unwrap();
-    
+    )?;
+
     let config = Config::new().baudrate(3_200.kHz().into());
-    let bus = SpiBusDriver::new(driver, &config).unwrap();
+    let bus = SpiBusDriver::new(driver, &config)?;
 
     let mut data: [RGB8; 1] = [RGB8::default(); 1];
     let mut ws = Ws2812::new(bus);
