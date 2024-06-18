@@ -7,8 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="479a280d-0249-4ad0-90fb-32fad4b152db" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="479a280d-0249-4ad0-90fb-32fad4b152db" name="Changes" comment="added rainbow test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
@@ -120,11 +119,24 @@
       <workItem from="1718708016618" duration="475000" />
       <workItem from="1718711520210" duration="26000" />
       <workItem from="1718712221375" duration="3504000" />
-      <workItem from="1718717739401" duration="1557000" />
+      <workItem from="1718717739401" duration="1956000" />
     </task>
+    <task id="LOCAL-00001" summary="added rainbow test">
+      <option name="closed" value="true" />
+      <created>1718719366223</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718719366223</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added rainbow test" />
+    <option name="LAST_COMMIT_MESSAGE" value="added rainbow test" />
   </component>
 </project>

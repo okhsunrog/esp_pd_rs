@@ -30,9 +30,8 @@ fn main() -> Result<()> {
         &DriverConfig::new(),
     )
     .unwrap();
-
-    let config = Config::new().baudrate(3_200_u32.kHz().into());
-
+    
+    let config = Config::new().baudrate(3_200.kHz().into());
     let bus = SpiBusDriver::new(driver, &config).unwrap();
 
     let mut data: [RGB8; 1] = [RGB8::default(); 1];
