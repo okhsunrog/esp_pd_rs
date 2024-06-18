@@ -27,7 +27,7 @@ fn main() -> Result<()> {
         sclk,
         sdo,
         Option::<AnyIOPin>::None,
-        &DriverConfig::new(),
+        &DriverConfig::new().dma(Dma::Auto(512)),
     )
     .unwrap();
     
@@ -44,7 +44,7 @@ fn main() -> Result<()> {
         data[0] = hsv2rgb(Hsv {
             hue,
             sat: 255,
-            val: 20,
+            val: 120,
         });
         ws.write(data.iter().cloned()).unwrap();
     });
