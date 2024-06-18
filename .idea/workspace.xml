@@ -8,11 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="479a280d-0249-4ad0-90fb-32fad4b152db" name="Changes" comment="added rainbow test">
-      <change beforePath="$PROJECT_DIR$/.idea/esp_pd.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/esp_pd.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +38,7 @@
     "Cargo.check.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
-    "git-widget-placeholder": "no__clk__spi",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "/home/okhsunrog/RustroverProjects/esp_pd_rs",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -147,7 +144,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added rainbow test" />
-    <option name="LAST_COMMIT_MESSAGE" value="added rainbow test" />
+    <MESSAGE value="git rid of sclk pin" />
+    <option name="LAST_COMMIT_MESSAGE" value="git rid of sclk pin" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
