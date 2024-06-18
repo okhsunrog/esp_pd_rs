@@ -8,8 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="479a280d-0249-4ad0-90fb-32fad4b152db" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ws2812-spi-rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/esp_pd.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/esp_pd.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usb-pd-rs/usb-pd/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/usb-pd-rs/usb-pd/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,23 +34,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.check.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/okhsunrog/RustroverProjects/esp_pd&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;language.rust.build.tool.cargo&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.check.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/home/okhsunrog/RustroverProjects/esp_pd",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.first.attach.projects": "true",
+    "settings.build.tools.auto.reload": "ALL",
+    "settings.editor.selected.configurable": "language.rust.cargo.check"
   }
-}</component>
+}]]></component>
   <component name="RsExternalLinterProjectSettings">
+    <option name="runOnTheFly" value="true" />
     <option name="tool" value="Clippy" />
   </component>
   <component name="RunAnythingCache">
@@ -117,7 +122,7 @@
       <workItem from="1718707720722" duration="289000" />
       <workItem from="1718708016618" duration="475000" />
       <workItem from="1718711520210" duration="26000" />
-      <workItem from="1718712221375" duration="237000" />
+      <workItem from="1718712221375" duration="3248000" />
     </task>
     <servers />
   </component>

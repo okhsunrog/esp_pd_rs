@@ -1,10 +1,9 @@
 use anyhow::Result;
 use config::{Config, DriverConfig};
-use esp_idf_svc::hal::gpio::Gpio0;
+use esp_idf_svc::hal::gpio;
 use esp_idf_svc::hal::prelude::*;
 use esp_idf_svc::hal::spi::{SpiBusDriver, SpiDriver};
 use log::info;
-
 use esp_idf_svc::hal::peripherals::Peripherals;
 use esp_idf_svc::hal::spi::*;
 use smart_leds::{SmartLedsWrite, RGB8};
@@ -23,7 +22,7 @@ fn main() -> Result<()> {
     let sdo = peripherals.pins.gpio10;
 
     let driver =
-        SpiDriver::new(spi, sclk, sdo, None as Option<Gpio0>, &DriverConfig::new()).unwrap();
+        SpiDriver::new(spi, sclk, sdo, None as Option<gpio::AnyIOPin>, &DriverConfig::new()).unwrap();
 
     let config = Config::new().baudrate(3_200_u32.kHz().into());
 
@@ -36,8 +35,8 @@ fn main() -> Result<()> {
     loop {
         data[0] = RGB8 {
             r: 0,
-            g: 0,
-            b: 0x10,
+            g: 0x10,
+            b: 0,
         };
         ws.write(data.iter().cloned()).unwrap();
         thread::sleep(Duration::from_secs(2));

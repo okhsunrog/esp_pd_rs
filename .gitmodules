@@ -1,3 +1,6 @@
 [submodule "usb-pd-rs"]
 	path = usb-pd-rs
 	url = https://github.com/okhsunrog/usb-pd-rs.git
+[submodule "ws2812-spi-rs"]
+	path = ws2812-spi-rs
+	url = https://github.com/okhsunrog/ws2812-spi-rs.git

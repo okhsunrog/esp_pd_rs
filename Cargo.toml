@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["usb-pd-rs/usb-pd", "usb-pd-rs/fusb302b"]
+members = ["usb-pd-rs/usb-pd", "usb-pd-rs/fusb302b", "ws2812-spi-rs"]
 exclude = ["usb-pd-rs/pd-interceptor"]
 
 [profile.release]
@@ -40,7 +40,7 @@ embassy = [
 log = { version = "0.4", default-features = false }
 esp-idf-svc = { version = "0.48", default-features = false }
 anyhow = "1.0.86"
-ws2812-spi = { git = "https://github.com/smart-leds-rs/ws2812-spi-rs", branch = "eh10", features = [
+ws2812-spi = { path = "./ws2812-spi-rs", features = [
     "mosi_idle_high",
 ] }
 smart-leds = "0.4.0"
