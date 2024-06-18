@@ -5,6 +5,8 @@
       <sourceFolder url="file://$MODULE_DIR$/fusb302b/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/usb-pd/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/usb-pd-rs/fusb302b/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/usb-pd-rs/usb-pd/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
