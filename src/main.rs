@@ -23,7 +23,7 @@ use embedded_cli::Command;
 use embedded_io;
 use std::convert::Infallible;
 use std::io;
-use std::io::{BufRead, Read};
+use std::io::{BufRead, Read, stdin};
 use std::ptr::null_mut;
 use embedded_io::Write;
 use esp_idf_svc::sys as _;
@@ -64,11 +64,11 @@ impl embedded_io::Write for Writer {
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
     esp_idf_svc::log::EspLogger::initialize_default();
-
-    unsafe {
-        esp!(uart_driver_install(0, 512, 512, 10, null_mut(), 0)).unwrap();
-        esp_vfs_dev_uart_use_driver(0);
-    }
+    //
+    // unsafe {
+    //     esp!(uart_driver_install(0, 512, 512, 10, null_mut(), 0)).unwrap();
+    //     esp_vfs_dev_uart_use_driver(0);
+    // }
     
     let peripherals = Peripherals::take()?;
 
@@ -88,15 +88,9 @@ fn main() -> Result<()> {
     let _ = embedded_writer.flush();
     println!("Writing using std");
 
-    let (command_buffer, history_buffer) = unsafe {
-        static mut COMMAND_BUFFER: [u8; 32] = [0; 32];
-        static mut HISTORY_BUFFER: [u8; 32] = [0; 32];
-        (COMMAND_BUFFER.as_mut(), HISTORY_BUFFER.as_mut())
-    };
+
     let mut cli = CliBuilder::default()
         .writer(embedded_writer)
-        .command_buffer(command_buffer)
-        .history_buffer(history_buffer)
         .build()
         .unwrap();
 
@@ -114,17 +108,16 @@ Use left and right to move inside input."
     })
         .unwrap();
 
-    let mut buf = [0u8; 1];
-    let buf_ptr = buf.as_mut_ptr() as *mut libc::c_void;
-    
-    loop {
-        thread::sleep(Duration::from_millis(10));
-        let len = unsafe { libc::read(libc::STDIN_FILENO, buf_ptr, buf.len()) };
-        if len == 0 {
-            continue
-        }
-        
 
+    loop {
+        thread::sleep(Duration::from_millis(50));
+        let mut buf = [0u8; 1];
+        if let Err(e) = stdin().read_exact(&mut buf) {
+            info!("Error reading from stdin: {}", e);
+            continue;
+        } else {
+            error!("Read byte: {}", buf[0]);
+        }
         let byte = buf[0];
 
         // Process incoming byte
