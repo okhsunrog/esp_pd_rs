@@ -47,7 +47,7 @@ smart-leds = "0.4.0"
 fusb302b = { path = "./usb-pd-rs/fusb302b" }
 usb-pd = { path = "./usb-pd-rs/usb-pd" }
 embedded-hal = "1.0.0"
-
+heapless = "0.8.0"
 
 [build-dependencies]
 embuild = "0.31.4"

@@ -1,15 +1,18 @@
 use anyhow::Result;
-use config::{Config, DriverConfig};
-use esp_idf_svc::hal::gpio::AnyIOPin;
-use esp_idf_svc::hal::peripherals::Peripherals;
-use esp_idf_svc::hal::prelude::*;
-use esp_idf_svc::hal::spi::*;
-use esp_idf_svc::hal::spi::{SpiBusDriver, SpiDriver};
+use esp_idf_svc::hal::{
+    //all hal imports go here
+    gpio::AnyIOPin,
+    peripherals::Peripherals,
+    prelude::*,
+    spi::{
+        config::{Config, DriverConfig},
+        Dma, SpiBusDriver, SpiDriver,
+    },
+};
+use heapless::Vec as HVec;
 use log::info;
-use smart_leds::hsv::{hsv2rgb, Hsv};
-use smart_leds::{SmartLedsWrite, RGB8};
-use std::thread;
-use std::time::Duration;
+use smart_leds::{brightness, colors::*, SmartLedsWrite, RGB8};
+use std::{iter, thread, time::Duration};
 use ws2812_spi::Ws2812;
 
 fn main() -> Result<()> {
@@ -24,22 +27,21 @@ fn main() -> Result<()> {
         &DriverConfig::new().dma(Dma::Auto(512)),
     )?;
 
-    let config = Config::new().baudrate(3_200.kHz().into());
-    let bus = SpiBusDriver::new(driver, &config)?;
+    info!("Spawning new thread for the WS2812 LED");
+    let _handle = thread::spawn(move || blink_task(driver));
 
-    let mut data: [RGB8; 1] = [RGB8::default(); 1];
+    loop {
+        thread::sleep(Duration::from_secs(60));
+    }
+}
+
+fn blink_task(driver: SpiDriver) -> Result<()> {
+    let bus = SpiBusDriver::new(driver, &Config::new().baudrate(3_200.kHz().into()))?;
     let mut ws = Ws2812::new(bus);
-    info!("Running rainbow test...");
-
-    #[allow(clippy::infinite_iter)]
-    (0..=255).cycle().for_each(|hue| {
-        thread::sleep(Duration::from_millis(10));
-        data[0] = hsv2rgb(Hsv {
-            hue,
-            sat: 255,
-            val: 120,
-        });
-        ws.write(data.iter().cloned()).unwrap();
-    });
+    let colors: HVec<RGB8, 2> = brightness([ORANGE, BLACK].into_iter(), 30).collect();
+    for color in colors.into_iter().cycle() {
+        ws.write(iter::once(color))?;
+        thread::sleep(Duration::from_secs(1));
+    }
     Ok(())
 }
