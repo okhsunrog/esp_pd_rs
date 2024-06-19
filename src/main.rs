@@ -10,7 +10,7 @@ use esp_idf_svc::hal::{
     },
 };
 use heapless::Vec as HVec;
-use log::{error, info};
+use log::{error, info, warn};
 use smart_leds::{brightness, colors::*, SmartLedsWrite, RGB8};
 use std::{iter, thread, time::Duration};
 use ws2812_spi::Ws2812;
@@ -25,7 +25,7 @@ use std::convert::Infallible;
 use std::io;
 use std::io::{BufRead, Read, stdin};
 use std::ptr::null_mut;
-use embedded_io::Write;
+use embedded_io::{Write};
 use esp_idf_svc::sys as _;
 use esp_idf_svc::sys::{esp, esp_vfs_dev_uart_use_driver, uart_driver_install};
 
@@ -64,11 +64,11 @@ impl embedded_io::Write for Writer {
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
     esp_idf_svc::log::EspLogger::initialize_default();
-    //
-    // unsafe {
-    //     esp!(uart_driver_install(0, 512, 512, 10, null_mut(), 0)).unwrap();
-    //     esp_vfs_dev_uart_use_driver(0);
-    // }
+    
+    unsafe {
+        esp!(uart_driver_install(0, 512, 512, 10, null_mut(), 0)).unwrap();
+        esp_vfs_dev_uart_use_driver(0);
+    }
     
     let peripherals = Peripherals::take()?;
 
@@ -108,15 +108,18 @@ Use left and right to move inside input."
     })
         .unwrap();
 
-
+    //let mut rx = FromStd::new(stdin());
+    let mut buf = [0u8];
     loop {
         thread::sleep(Duration::from_millis(50));
-        let mut buf = [0u8; 1];
         if let Err(e) = stdin().read_exact(&mut buf) {
             info!("Error reading from stdin: {}", e);
             continue;
+        } else if !buf.is_empty() {
+           error!("new buf > 0!"); 
         } else {
-            error!("Read byte: {}", buf[0]);
+            warn!("buf is 0 bytes");
+            continue;
         }
         let byte = buf[0];
 
