@@ -4,3 +4,6 @@
 [submodule "ws2812-spi-rs"]
 	path = ws2812-spi-rs
 	url = https://github.com/okhsunrog/ws2812-spi-rs.git
+[submodule "esp-idf-sys"]
+	path = esp-idf-sys
+	url = https://github.com/okhsunrog/esp-idf-sys.git

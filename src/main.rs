@@ -1,4 +1,5 @@
 use anyhow::Result;
+use embedded_io_adapters::std::FromStd;
 use esp_idf_svc::hal::{
     //all hal imports go here
     gpio::AnyIOPin,
@@ -13,22 +14,18 @@ use heapless::Vec as HVec;
 use log::{error, info, warn};
 use smart_leds::{brightness, colors::*, SmartLedsWrite, RGB8};
 use std::{iter, thread, time::Duration};
-use ws2812_spi::Ws2812;
-use embedded_io_adapters::std::FromStd;
 use ufmt::{uwrite, uwriteln};
-
+use ws2812_spi::Ws2812;
 
 use embedded_cli::cli::{CliBuilder, CliHandle};
 use embedded_cli::Command;
 use embedded_io;
+use embedded_io::Write;
+use esp_idf_svc::sys as _;
 use std::convert::Infallible;
 use std::io;
-use std::io::{BufRead, Read, stdin};
+use std::io::{stdin, BufRead, Read};
 use std::ptr::null_mut;
-use embedded_io::{Write};
-use esp_idf_svc::sys as _;
-use esp_idf_svc::sys::{esp, esp_console_dev_usb_serial_jtag_config_t, esp_vfs_dev_uart_use_driver, esp_vfs_dev_usb_serial_jtag_register, esp_vfs_usb_serial_jtag_use_driver, uart_driver_install};
-
 
 #[derive(Command)]
 enum Base<'a> {
@@ -42,7 +39,7 @@ enum Base<'a> {
     Exit,
 }
 
-pub struct Writer (FromStd<io::Stdout>);
+pub struct Writer(FromStd<io::Stdout>);
 
 impl embedded_io::ErrorType for Writer {
     type Error = Infallible;
@@ -60,15 +57,24 @@ impl embedded_io::Write for Writer {
     }
 }
 
-
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
 
     unsafe {
-        
+        use esp_idf_svc::sys::{
+            esp_line_endings_t_ESP_LINE_ENDINGS_CR, esp_line_endings_t_ESP_LINE_ENDINGS_CRLF,
+            esp_vfs_dev_usb_serial_jtag_set_rx_line_endings,
+            esp_vfs_dev_usb_serial_jtag_set_tx_line_endings, esp_vfs_usb_serial_jtag_use_driver,
+            usb_serial_jtag_driver_config_t, usb_serial_jtag_driver_install,
+        };
+        esp_vfs_dev_usb_serial_jtag_set_rx_line_endings(esp_line_endings_t_ESP_LINE_ENDINGS_CR);
+        esp_vfs_dev_usb_serial_jtag_set_tx_line_endings(esp_line_endings_t_ESP_LINE_ENDINGS_CRLF);
+        let mut serial_config = usb_serial_jtag_driver_config_t {
+            rx_buffer_size: 512,
+            tx_buffer_size: 512,
+        };
+        usb_serial_jtag_driver_install(&mut serial_config);
         esp_vfs_usb_serial_jtag_use_driver();
-        usb_serial
-
     }
     esp_idf_svc::log::EspLogger::initialize_default();
 
@@ -84,18 +90,17 @@ fn main() -> Result<()> {
     info!("Spawning new thread for the WS2812 LED");
     let _handle = thread::spawn(move || blink_task(driver));
 
-
     let mut embedded_writer: FromStd<io::Stdout> = FromStd::new(io::stdout());
-    embedded_writer.write_all(b"Writing using embedded_io\n").unwrap();
+    embedded_writer
+        .write_all(b"Writing using embedded_io\n")
+        .unwrap();
     let _ = embedded_writer.flush();
     println!("Writing using std");
-
 
     let mut cli = CliBuilder::default()
         .writer(embedded_writer)
         .build()
         .unwrap();
-
 
     cli.write(|writer| {
         uwrite!(
@@ -108,7 +113,7 @@ Use left and right to move inside input."
         )?;
         Ok(())
     })
-        .unwrap();
+    .unwrap();
 
     //let mut rx = FromStd::new(stdin());
     let mut buf = [0u8];
@@ -116,11 +121,6 @@ Use left and right to move inside input."
         thread::sleep(Duration::from_millis(50));
         if let Err(e) = stdin().read_exact(&mut buf) {
             info!("Error reading from stdin: {}", e);
-            continue;
-        } else if !buf.is_empty() {
-           error!("new buf > 0!"); 
-        } else {
-            warn!("buf is 0 bytes");
             continue;
         }
         let byte = buf[0];
@@ -148,7 +148,6 @@ Use left and right to move inside input."
             }),
         );
     }
-
 }
 
 fn blink_task(driver: SpiDriver) -> Result<()> {
