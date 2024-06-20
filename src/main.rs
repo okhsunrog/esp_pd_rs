@@ -27,7 +27,7 @@ use std::io::{BufRead, Read, stdin};
 use std::ptr::null_mut;
 use embedded_io::{Write};
 use esp_idf_svc::sys as _;
-use esp_idf_svc::sys::{esp, esp_vfs_dev_uart_use_driver, uart_driver_install};
+use esp_idf_svc::sys::{esp, esp_console_dev_usb_serial_jtag_config_t, esp_vfs_dev_uart_use_driver, esp_vfs_dev_usb_serial_jtag_register, esp_vfs_usb_serial_jtag_use_driver, uart_driver_install};
 
 
 #[derive(Command)]
@@ -63,13 +63,15 @@ impl embedded_io::Write for Writer {
 
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
-    esp_idf_svc::log::EspLogger::initialize_default();
-    
+
     unsafe {
-        esp!(uart_driver_install(0, 512, 512, 10, null_mut(), 0)).unwrap();
-        esp_vfs_dev_uart_use_driver(0);
+        
+        esp_vfs_usb_serial_jtag_use_driver();
+        usb_serial
+
     }
-    
+    esp_idf_svc::log::EspLogger::initialize_default();
+
     let peripherals = Peripherals::take()?;
 
     let driver = SpiDriver::new_without_sclk(
