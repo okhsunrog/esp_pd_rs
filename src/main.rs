@@ -23,8 +23,10 @@ use embedded_io;
 use embedded_io::Write;
 use esp_idf_svc::sys as _;
 use std::convert::Infallible;
+use std::ffi::c_void;
 use std::io;
 use std::io::{stdin, BufRead, Read};
+use std::os::fd::AsRawFd;
 use std::ptr::null_mut;
 
 #[derive(Command)]
@@ -115,22 +117,25 @@ Use left and right to move inside input."
     })
     .unwrap();
 
-    //let mut rx = FromStd::new(stdin());
+    let reader_fd = stdin().as_raw_fd();
     let mut buf = [0u8];
     loop {
         thread::sleep(Duration::from_millis(50));
-        if let Err(e) = stdin().read_exact(&mut buf) {
-            info!("Error reading from stdin: {}", e);
+        let ret = unsafe { libc::read(reader_fd, buf.as_mut_ptr() as *mut c_void, 1) };
+        if ret == -1 {
+            info!("Error reading from stdin");
             continue;
         }
-        let byte = buf[0];
+        if ret == 0 {
+            continue;
+        }
 
         // Process incoming byte
         // Command type is specified for autocompletion and help
         // Processor accepts closure where we can process parsed command
         // we can use different command and processor with each call
         let _ = cli.process_byte::<Base, _>(
-            byte,
+            buf[0],
             &mut Base::processor(|cli, command| {
                 match command {
                     Base::Hello { name } => {
