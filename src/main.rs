@@ -11,23 +11,20 @@ use esp_idf_svc::hal::{
     },
 };
 use heapless::Vec as HVec;
-use log::{error, info, warn};
+use log::{error, info};
 use smart_leds::{brightness, colors::*, SmartLedsWrite, RGB8};
 use std::{iter, thread, time::Duration};
-use ufmt::{uwrite, uwriteln};
+use ufmt::uwrite;
 use ws2812_spi::Ws2812;
 
-use embedded_cli::cli::{CliBuilder, CliHandle};
+use embedded_cli::cli::CliBuilder;
 use embedded_cli::Command;
 use embedded_io;
 use embedded_io::Write;
-use esp_idf_svc::sys as _;
-use std::convert::Infallible;
 use std::ffi::c_void;
 use std::io;
-use std::io::{stdin, BufRead, Read};
+use std::io::stdin;
 use std::os::fd::AsRawFd;
-use std::ptr::null_mut;
 
 #[derive(Command)]
 enum Base<'a> {
@@ -41,39 +38,17 @@ enum Base<'a> {
     Exit,
 }
 
-pub struct Writer(FromStd<io::Stdout>);
-
-impl embedded_io::ErrorType for Writer {
-    type Error = Infallible;
-}
-
-impl embedded_io::Write for Writer {
-    fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
-        self.0.write(buf).unwrap();
-        Ok(buf.len())
-    }
-
-    fn flush(&mut self) -> Result<(), Self::Error> {
-        self.0.flush().unwrap();
-        Ok(())
-    }
-}
-
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
 
     unsafe {
         use esp_idf_svc::sys::{
-            esp_line_endings_t_ESP_LINE_ENDINGS_CR, esp_line_endings_t_ESP_LINE_ENDINGS_CRLF,
-            esp_vfs_dev_usb_serial_jtag_set_rx_line_endings,
-            esp_vfs_dev_usb_serial_jtag_set_tx_line_endings, esp_vfs_usb_serial_jtag_use_driver,
+            esp_vfs_usb_serial_jtag_use_driver,
             usb_serial_jtag_driver_config_t, usb_serial_jtag_driver_install,
         };
-        esp_vfs_dev_usb_serial_jtag_set_rx_line_endings(esp_line_endings_t_ESP_LINE_ENDINGS_CR);
-        esp_vfs_dev_usb_serial_jtag_set_tx_line_endings(esp_line_endings_t_ESP_LINE_ENDINGS_CRLF);
         let mut serial_config = usb_serial_jtag_driver_config_t {
-            rx_buffer_size: 512,
-            tx_buffer_size: 512,
+            rx_buffer_size: 128,
+            tx_buffer_size: 128,
         };
         usb_serial_jtag_driver_install(&mut serial_config);
         esp_vfs_usb_serial_jtag_use_driver();
@@ -115,25 +90,23 @@ Use left and right to move inside input."
         )?;
         Ok(())
     })
-    .unwrap();
+        .unwrap();
 
     let reader_fd = stdin().as_raw_fd();
     let mut buf = [0u8];
     loop {
         thread::sleep(Duration::from_millis(50));
-        let ret = unsafe { libc::read(reader_fd, buf.as_mut_ptr() as *mut c_void, 1) };
-        if ret == -1 {
-            info!("Error reading from stdin");
-            continue;
-        }
-        if ret == 0 {
-            continue;
+        use esp_idf_svc::sys::read;
+        let ret = unsafe { read(reader_fd, buf.as_mut_ptr() as *mut c_void, 1) };
+        match ret {
+            -1 => {
+                error!("Error reading from stdin");
+                continue;
+            },
+            0 => continue,
+            _ => {}
         }
 
-        // Process incoming byte
-        // Command type is specified for autocompletion and help
-        // Processor accepts closure where we can process parsed command
-        // we can use different command and processor with each call
         let _ = cli.process_byte::<Base, _>(
             buf[0],
             &mut Base::processor(|cli, command| {
