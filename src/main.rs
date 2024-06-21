@@ -3,7 +3,7 @@ mod led;
 mod vfs_embedded_reader;
 
 use crate::cli::{configure_serial, console_task};
-use crate::led::blink_task;
+use crate::led::led_task;
 use anyhow::Result;
 use embedded_io_adapters::std::FromStd;
 use esp_idf_svc::hal::{
@@ -45,7 +45,7 @@ fn main() -> Result<()> {
     }
     .set()
     .unwrap();
-    let _handle = thread::spawn(move || blink_task(driver));
+    let _handle = thread::spawn(move || led_task(driver));
 
     loop {
         thread::sleep(Duration::from_secs(1));

@@ -7,7 +7,7 @@ use std::time::Duration;
 use std::{iter, thread};
 use ws2812_spi::Ws2812;
 
-pub fn blink_task(driver: SpiDriver) -> anyhow::Result<()> {
+pub fn led_task(driver: SpiDriver) -> anyhow::Result<()> {
     let bus = SpiBusDriver::new(driver, &Config::new().baudrate(3_200.kHz().into()))?;
     let mut ws = Ws2812::new(bus);
     let colors: HVec<RGB8, 2> = brightness([GREEN, BLACK].into_iter(), 30).collect();
