@@ -11,7 +11,7 @@ use esp_idf_svc::hal::{
     },
 };
 use heapless::Vec as HVec;
-use log::{error, info};
+use log::error;
 use smart_leds::{brightness, colors::*, SmartLedsWrite, RGB8};
 use std::{iter, thread, time::Duration};
 use ufmt::uwrite;
@@ -19,8 +19,6 @@ use ws2812_spi::Ws2812;
 
 use embedded_cli::cli::CliBuilder;
 use embedded_cli::Command;
-use embedded_io;
-use embedded_io::Write;
 use std::ffi::c_void;
 use std::io;
 use std::io::stdin;
@@ -28,13 +26,7 @@ use std::os::fd::AsRawFd;
 
 #[derive(Command)]
 enum Base<'a> {
-    /// Say hello to World or someone else
-    Hello {
-        /// To whom to say hello (World by default)
-        name: Option<&'a str>,
-    },
-
-    /// Stop CLI and exit
+    Hello { name: Option<&'a str> },
     Exit,
 }
 
@@ -43,8 +35,8 @@ fn main() -> Result<()> {
 
     unsafe {
         use esp_idf_svc::sys::{
-            esp_vfs_usb_serial_jtag_use_driver,
-            usb_serial_jtag_driver_config_t, usb_serial_jtag_driver_install,
+            esp_vfs_usb_serial_jtag_use_driver, usb_serial_jtag_driver_config_t,
+            usb_serial_jtag_driver_install,
         };
         let mut serial_config = usb_serial_jtag_driver_config_t {
             rx_buffer_size: 128,
@@ -64,33 +56,19 @@ fn main() -> Result<()> {
         &DriverConfig::new().dma(Dma::Auto(512)),
     )?;
 
-    info!("Spawning new thread for the WS2812 LED");
     let _handle = thread::spawn(move || blink_task(driver));
 
-    let mut embedded_writer: FromStd<io::Stdout> = FromStd::new(io::stdout());
-    embedded_writer
-        .write_all(b"Writing using embedded_io\n")
-        .unwrap();
-    let _ = embedded_writer.flush();
-    println!("Writing using std");
-
+    let embedded_writer: FromStd<io::Stdout> = FromStd::new(io::stdout());
     let mut cli = CliBuilder::default()
         .writer(embedded_writer)
         .build()
         .unwrap();
 
     cli.write(|writer| {
-        uwrite!(
-            writer,
-            "Cli is running. Press 'Esc' to exit
-Type \"help\" for a list of commands.
-Use backspace and tab to remove chars and autocomplete.
-Use up and down for history navigation.
-Use left and right to move inside input."
-        )?;
+        uwrite!(writer, "Cli is running.")?;
         Ok(())
     })
-        .unwrap();
+    .unwrap();
 
     let reader_fd = stdin().as_raw_fd();
     let mut buf = [0u8];
@@ -102,7 +80,7 @@ Use left and right to move inside input."
             -1 => {
                 error!("Error reading from stdin");
                 continue;
-            },
+            }
             0 => continue,
             _ => {}
         }
@@ -112,13 +90,9 @@ Use left and right to move inside input."
             &mut Base::processor(|cli, command| {
                 match command {
                     Base::Hello { name } => {
-                        // last write in command callback may or may not
-                        // end with newline. so both uwrite!() and uwriteln!()
-                        // will give identical results
                         uwrite!(cli.writer(), "Hello, {}", name.unwrap_or("World"))?;
                     }
                     Base::Exit => {
-                        // We can write via normal function if formatting not needed
                         cli.writer().write_str("Cli can't shutdown now")?;
                     }
                 }
