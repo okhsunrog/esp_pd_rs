@@ -1,0 +1,61 @@
+use embedded_cli::cli::CliBuilder;
+use embedded_cli::Command;
+use embedded_io::{Error, Read, Write};
+use ufmt::uwrite;
+
+#[derive(Command)]
+enum Base<'a> {
+    Hello { name: Option<&'a str> },
+    Exit,
+}
+
+pub fn console_task<T, TE, U>(reader: &mut U, writer: T)
+where
+    T: Write<Error = TE>,
+    TE: Error,
+    U: Read,
+{
+    let mut cli = CliBuilder::default().writer(writer).build().unwrap();
+
+    cli.write(|writer| {
+        uwrite!(writer, "Cli is running.")?;
+        Ok(())
+    })
+    .unwrap();
+    let mut buf = [0u8];
+    loop {
+        match reader.read(&mut buf) {
+            Ok(1) => (),
+            _ => continue,
+        }
+        let _ = cli.process_byte::<Base, _>(
+            buf[0],
+            &mut Base::processor(|cli, command| {
+                match command {
+                    Base::Hello { name } => {
+                        uwrite!(cli.writer(), "Hello, {}", name.unwrap_or("World"))?;
+                    }
+                    Base::Exit => {
+                        cli.writer().write_str("Cli can't shutdown now")?;
+                    }
+                }
+                Ok(())
+            }),
+        );
+    }
+}
+
+pub fn configure_serial() {
+    unsafe {
+        use esp_idf_svc::sys::{
+            esp_vfs_usb_serial_jtag_use_driver, usb_serial_jtag_driver_config_t,
+            usb_serial_jtag_driver_install,
+        };
+        let mut serial_config = usb_serial_jtag_driver_config_t {
+            rx_buffer_size: 128,
+            tx_buffer_size: 128,
+        };
+        usb_serial_jtag_driver_install(&mut serial_config);
+        esp_vfs_usb_serial_jtag_use_driver();
+    }
+}
