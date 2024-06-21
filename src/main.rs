@@ -29,7 +29,7 @@ fn main() -> Result<()> {
 
     // High-prio tasks
     ThreadSpawnConfiguration {
-        priority: 10,
+        priority: 7,
         ..Default::default()
     }
     .set()

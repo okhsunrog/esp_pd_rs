@@ -1,6 +1,7 @@
 use embedded_cli::cli::CliBuilder;
 use embedded_cli::Command;
 use embedded_io::{Error, Read, Write};
+use esp_idf_svc::sys;
 use ufmt::uwrite;
 
 #[derive(Command)]
@@ -16,12 +17,6 @@ where
     U: Read,
 {
     let mut cli = CliBuilder::default().writer(writer).build().unwrap();
-
-    cli.write(|writer| {
-        uwrite!(writer, "Cli is running.")?;
-        Ok(())
-    })
-    .unwrap();
     let mut buf = [0u8];
     loop {
         match reader.read(&mut buf) {
@@ -47,15 +42,11 @@ where
 
 pub fn configure_serial() {
     unsafe {
-        use esp_idf_svc::sys::{
-            esp_vfs_usb_serial_jtag_use_driver, usb_serial_jtag_driver_config_t,
-            usb_serial_jtag_driver_install,
-        };
-        let mut serial_config = usb_serial_jtag_driver_config_t {
+        let mut serial_config = sys::usb_serial_jtag_driver_config_t {
             rx_buffer_size: 128,
             tx_buffer_size: 128,
         };
-        usb_serial_jtag_driver_install(&mut serial_config);
-        esp_vfs_usb_serial_jtag_use_driver();
+        sys::usb_serial_jtag_driver_install(&mut serial_config);
+        sys::esp_vfs_usb_serial_jtag_use_driver();
     }
 }
