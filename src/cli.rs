@@ -1,8 +1,6 @@
-use std::time::Duration;
-use embedded_cli::cli::CliBuilder;
-use embedded_cli::Command;
+use std::{thread::sleep, time::Duration};
+use embedded_cli::{cli::CliBuilder, Command};
 use embedded_io::{Error, Read, Write};
-use esp_idf_svc::sys;
 use ufmt::uwrite;
 
 #[derive(Command)]
@@ -13,17 +11,21 @@ enum Base<'a> {
 
 pub fn console_task<T, TE, U>(reader: &mut U, writer: T)
 where
-    T: Write<Error = TE>,
+    T: Write<Error=TE>,
     TE: Error,
     U: Read,
 {
-    std::thread::sleep(Duration::from_millis(50));
+    // let main task exit
+    sleep(Duration::from_millis(20));
     let mut cli = CliBuilder::default().writer(writer).build().unwrap();
     let mut buf = [0u8];
     loop {
         match reader.read(&mut buf) {
             Ok(1) => (),
-            _ => continue,
+            _ => {
+                sleep(Duration::from_millis(100));
+                continue;
+            }
         }
         let _ = cli.process_byte::<Base, _>(
             buf[0],
@@ -43,12 +45,12 @@ where
 }
 
 pub fn configure_serial() {
+    use esp_idf_svc::sys::*; 
     unsafe {
-        let mut serial_config = sys::usb_serial_jtag_driver_config_t {
+        usb_serial_jtag_driver_install(&mut usb_serial_jtag_driver_config_t {
             rx_buffer_size: 128,
             tx_buffer_size: 128,
-        };
-        sys::usb_serial_jtag_driver_install(&mut serial_config);
-        sys::esp_vfs_usb_serial_jtag_use_driver();
+        });
+        esp_vfs_usb_serial_jtag_use_driver();
     }
 }
