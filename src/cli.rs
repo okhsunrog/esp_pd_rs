@@ -1,3 +1,4 @@
+use std::time::Duration;
 use embedded_cli::cli::CliBuilder;
 use embedded_cli::Command;
 use embedded_io::{Error, Read, Write};
@@ -16,6 +17,7 @@ where
     TE: Error,
     U: Read,
 {
+    std::thread::sleep(Duration::from_millis(50));
     let mut cli = CliBuilder::default().writer(writer).build().unwrap();
     let mut buf = [0u8];
     loop {

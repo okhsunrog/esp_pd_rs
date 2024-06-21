@@ -12,7 +12,7 @@ use esp_idf_svc::hal::{
     spi::{config::DriverConfig, Dma, SpiDriver},
     task::thread::ThreadSpawnConfiguration,
 };
-use std::{io, os::fd::AsRawFd, thread, time::Duration};
+use std::{io, os::fd::AsRawFd, thread};
 
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
@@ -26,14 +26,12 @@ fn main() -> Result<()> {
         Option::<AnyIOPin>::None,
         &DriverConfig::new().dma(Dma::Auto(512)),
     )?;
-
     // High-prio tasks
     ThreadSpawnConfiguration {
         priority: 7,
         ..Default::default()
     }
-    .set()
-    .unwrap();
+    .set()?;
     let mut reader = vfs_embedded_reader::VfsReader::new(io::stdin().as_raw_fd());
     let writer = FromStd::new(io::stdout());
     let _handle = thread::spawn(move || console_task(&mut reader, writer));
@@ -43,11 +41,8 @@ fn main() -> Result<()> {
         priority: 4,
         ..Default::default()
     }
-    .set()
-    .unwrap();
+    .set()?;
     let _handle = thread::spawn(move || led_task(driver));
 
-    loop {
-        thread::sleep(Duration::from_secs(1));
-    }
+    Ok(())
 }
