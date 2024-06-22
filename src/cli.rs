@@ -48,8 +48,8 @@ pub fn configure_serial() {
     use esp_idf_svc::sys::*; 
     unsafe {
         usb_serial_jtag_driver_install(&mut usb_serial_jtag_driver_config_t {
-            rx_buffer_size: 128,
-            tx_buffer_size: 128,
+            rx_buffer_size: 256,
+            tx_buffer_size: 256,
         });
         esp_vfs_usb_serial_jtag_use_driver();
     }
