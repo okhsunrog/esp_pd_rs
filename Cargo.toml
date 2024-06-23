@@ -15,7 +15,7 @@ name = "esp_pd"
 version = "0.1.0"
 authors = ["okhsunrog <me@okhsunrog.ru>"]
 edition = "2021"
-rust-version = "1.72"
+rust-version = "1.77"
 
 [[bin]]
 name = "esp_pd"
@@ -38,7 +38,7 @@ embassy = [
 
 [dependencies]
 log = { version = "0.4", default-features = false }
-esp-idf-svc = { version = "0.48", default-features = false }
+esp-idf-svc = { version = "0.49", default-features = false }
 anyhow = "1.0.86"
 ws2812-spi = { path = "./ws2812-spi-rs", features = ["mosi_idle_high"] }
 smart-leds = "0.4.0"
@@ -53,13 +53,4 @@ rand = "0.9.0-alpha.1"
 ufmt = "0.2.0"
 
 [build-dependencies]
-embuild = "0.31.4"
-
-
-[patch.crates-io]
-embuild = { git = "https://github.com/esp-rs/embuild" }
-esp-idf-svc = { git = "https://github.com/esp-rs/esp-idf-svc" }
-esp-idf-hal = { git = "https://github.com/esp-rs/esp-idf-hal" }
-esp-idf-sys = { git = "https://github.com/esp-rs/esp-idf-sys" }
-embedded-svc = { git = "https://github.com/esp-rs/embedded-svc" }
-embedded-cli = { git = "https://github.com/funbiscuit/embedded-cli-rs" }
+embuild = "0.32"
