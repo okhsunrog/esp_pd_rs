@@ -11,7 +11,7 @@ build-std = ["std", "panic_abort"]
 
 [env]
 MCU = "esp32c3"
-ESP_IDF_VERSION = "v5.2.2"
+ESP_IDF_VERSION = "v5.3"
 
 # Workaround for https://github.com/esp-rs/esp-idf-template/issues/174 until
 # https://github.com/esp-rs/esp-idf-hal/pull/387 gets released and the template

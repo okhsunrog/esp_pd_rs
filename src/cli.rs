@@ -1,6 +1,6 @@
-use std::{thread::sleep, time::Duration};
 use embedded_cli::{cli::CliBuilder, Command};
 use embedded_io::{Error, Read, Write};
+use std::{thread::sleep, time::Duration};
 use ufmt::uwrite;
 
 #[derive(Command)]
@@ -11,7 +11,7 @@ enum Base<'a> {
 
 pub fn console_task<T, TE, U>(reader: &mut U, writer: T)
 where
-    T: Write<Error=TE>,
+    T: Write<Error = TE>,
     TE: Error,
     U: Read,
 {
@@ -45,7 +45,7 @@ where
 }
 
 pub fn configure_serial() {
-    use esp_idf_svc::sys::*; 
+    use esp_idf_svc::sys::*;
     unsafe {
         usb_serial_jtag_driver_install(&mut usb_serial_jtag_driver_config_t {
             rx_buffer_size: 256,

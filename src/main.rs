@@ -3,23 +3,22 @@ mod display;
 mod led;
 mod vfs_embedded_reader;
 
-use anyhow::Result;
-use embedded_io_adapters::std::FromStd;
-use esp_idf_svc::hal::{
-    prelude::*,
-    i2c::{I2cConfig, I2cDriver},
-    gpio::AnyIOPin,
-    peripherals::Peripherals,
-    spi::{config::DriverConfig, Dma, SpiDriver},
-    task::thread::ThreadSpawnConfiguration,
-};
-use std::{io, os::fd::AsRawFd, thread};
 use crate::{
     cli::{configure_serial, console_task},
     display::display_task,
     led::led_task,
 };
-
+use anyhow::Result;
+use embedded_io_adapters::std::FromStd;
+use esp_idf_svc::hal::{
+    gpio::AnyIOPin,
+    i2c::{I2cConfig, I2cDriver},
+    peripherals::Peripherals,
+    prelude::*,
+    spi::{config::DriverConfig, Dma, SpiDriver},
+    task::thread::ThreadSpawnConfiguration,
+};
+use std::{io, os::fd::AsRawFd, thread};
 
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
@@ -45,7 +44,8 @@ fn main() -> Result<()> {
     ThreadSpawnConfiguration {
         priority: 7,
         ..Default::default()
-    }.set()?;
+    }
+    .set()?;
     let mut reader = vfs_embedded_reader::VfsReader::new(io::stdin().as_raw_fd());
     let writer = FromStd::new(io::stdout());
     thread::spawn(move || console_task(&mut reader, writer));
@@ -54,7 +54,8 @@ fn main() -> Result<()> {
     ThreadSpawnConfiguration {
         priority: 4,
         ..Default::default()
-    }.set()?;
+    }
+    .set()?;
     thread::spawn(move || led_task(driver));
     thread::spawn(move || display_task(i2c));
 
