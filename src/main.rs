@@ -57,7 +57,8 @@ fn main() -> Result<()> {
     }
     .set()?;
     thread::spawn(move || led_task(driver));
-    thread::spawn(move || display_task(i2c));
+    // disable display test for now
+    //thread::spawn(move || display_task(i2c));
 
     Ok(())
 }
